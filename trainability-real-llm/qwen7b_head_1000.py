@@ -50,7 +50,7 @@ def step(batch,A,B,lr):
 @torch.no_grad()
 def probe(batch,A,B): return logits(batch,A,B)[:,-2:,:].cpu()
 
-def run(seed=0,steps=1000,lr=0.02):
+def run(seed=0,steps=1000,lr=5e-4):
  seed_all(seed);tok=AutoTokenizer.from_pretrained(MID,use_fast=True);tr,he=data(tok,seed);allb,n,h,v,cache_s=cache_full_model(tok,tr,he);train=allb[:len(tr)];held=allb[len(tr):]
  A=torch.randn(RANK,h)*0.01;B=torch.zeros(v,RANK);warm=[]
  for i in range(2):A,B,l=step(train[i],A,B,lr);warm.append(l)
@@ -59,11 +59,12 @@ def run(seed=0,steps=1000,lr=0.02):
  sl=[];cl=[];t0=time.perf_counter()
  for t in range(1,steps+1):
   batch=train[(t-1)%len(train)];As,Bs,ls=step(batch,As,Bs,lr);Ac,Bc,lc=step(batch,Ac,Bc,lr);sl.append(ls);cl.append(lc)
+  if not math.isfinite(ls) or not math.isfinite(lc): raise RuntimeError(f'non-finite loss at step {t}: source={ls}, sidecar={lc}')
   if t in cps:
    ps=probe(held[0],As,Bs);pc=probe(held[0],Ac,Bc);rec[str(t)]={'delta_relerr':float(((Bc@Ac)-(Bs@As)).norm()/((Bs@As).norm()+1e-12)),'probe_logit_relerr':float((pc-ps).norm()/(ps.norm()+1e-12)),'source_loss':ls,'sidecar_loss':lc,'loss_absdiff':abs(ls-lc)}
  train_s=time.perf_counter()-t0
  return {'model_id':MID,'seed':seed,'test_type':'actual_pretrained_7B_exact_frozen_backbone_cache_1000step_lm_head_lora_causal_lm','parameter_count':int(n),'hidden_size':h,'vocab_size':v,'rank':RANK,'steps':steps,'lr':lr,'cache_seconds':cache_s,'training_seconds':train_s,'warm_losses':warm,'checkpoints':rec,'source_losses':sl,'sidecar_losses':cl,'final_delta_relerr':rec[str(steps)]['delta_relerr'],'final_probe_logit_relerr':rec[str(steps)]['probe_logit_relerr'],'max_loss_absdiff':float(max(abs(a-b) for a,b in zip(sl,cl))),'sidecar_scalars':RANK*(RANK+1)//2,'factor_scalars':RANK*(h+v),'actual_pretrained_7B_weights_loaded':True,'actual_public_wikitext2_used':True,'actual_causal_lm_cross_entropy_used':True,'backbone_cache_exact_for_declared_trainable_scope':True,'trainable_target':'lm_head_rank8_LoRA','note':'The 7.61B frozen backbone is executed once per cached sequence to obtain exact hidden states/base logits. Because only the LM-head adapter is trainable, reusing this cache is mathematically equivalent to recomputing the frozen backbone at every continuation step.'}
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--seed',type=int,required=True);ap.add_argument('--steps',type=int,default=1000);ap.add_argument('--out',required=True);a=ap.parse_args();o=Path(a.out);o.mkdir(parents=True,exist_ok=True);r=run(a.seed,a.steps);p=o/f'qwen7b_head1000_seed{a.seed}.json';p.write_text(json.dumps(r,indent=2),encoding='utf-8');print(json.dumps(r,indent=2));print('RESULT_FILE='+str(p))
+ ap=argparse.ArgumentParser();ap.add_argument('--seed',type=int,required=True);ap.add_argument('--steps',type=int,default=1000);ap.add_argument('--lr',type=float,default=5e-4);ap.add_argument('--out',required=True);a=ap.parse_args();o=Path(a.out);o.mkdir(parents=True,exist_ok=True);r=run(a.seed,a.steps,a.lr);p=o/f'qwen7b_head1000_seed{a.seed}.json';p.write_text(json.dumps(r,indent=2),encoding='utf-8');print(json.dumps(r,indent=2));print('RESULT_FILE='+str(p))
 if __name__=='__main__':main()
