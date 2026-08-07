@@ -1,0 +1,50 @@
+name: Trainability Qwen Long Continuation
+
+on:
+  push:
+    paths:
+      - '.github/workflows/trainability-qwen-long-continuation.yml'
+      - 'trainability-real-llm/conversion_benchmark.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  HF_HOME: ${{ github.workspace }}/.hf-cache
+  TOKENIZERS_PARALLELISM: 'false'
+  PYTHONUNBUFFERED: '1'
+
+jobs:
+  longrun:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        conversion: [int4, prune40]
+        seed: [0, 1, 2]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU stack
+        run: |
+          python -m pip install --upgrade pip
+          pip install --extra-index-url https://download.pytorch.org/whl/cpu torch
+          pip install 'transformers>=4.51,<5' 'huggingface_hub>=0.34' safetensors accelerate sentencepiece protobuf hf_xet
+      - name: Run 100-step full-LM continuation
+        run: |
+          d='results/qwen-${{ matrix.conversion }}-long-seed${{ matrix.seed }}'
+          mkdir -p "$d"
+          python trainability-real-llm/conversion_benchmark.py --target qwen --conversion '${{ matrix.conversion }}' --seed '${{ matrix.seed }}' --steps 100 --out "$d" 2>&1 | tee "$d/run.log"
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tq-qwen-${{ matrix.conversion }}-long-seed${{ matrix.seed }}
+          path: results/qwen-${{ matrix.conversion }}-long-seed${{ matrix.seed }}/
+          if-no-files-found: warn
+          retention-days: 30
