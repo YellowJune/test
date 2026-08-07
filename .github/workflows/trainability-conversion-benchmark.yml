@@ -1,0 +1,51 @@
+name: Trainability Conversion Benchmark
+
+on:
+  push:
+    paths:
+      - 'trainability-real-llm/conversion_benchmark.py'
+      - '.github/workflows/trainability-conversion-benchmark.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  HF_HOME: ${{ github.workspace }}/.hf-cache
+  TOKENIZERS_PARALLELISM: 'false'
+  PYTHONUNBUFFERED: '1'
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        target: [qwen, llama]
+        conversion: [int8, int4, prune20, prune40]
+        seed: [0, 1, 2]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU stack
+        run: |
+          python -m pip install --upgrade pip
+          pip install --extra-index-url https://download.pytorch.org/whl/cpu torch
+          pip install 'transformers>=4.51,<5' 'huggingface_hub>=0.34' safetensors accelerate sentencepiece protobuf hf_xet
+      - name: Run conversion benchmark
+        run: |
+          d='results/${{ matrix.target }}-${{ matrix.conversion }}-seed${{ matrix.seed }}'
+          mkdir -p "$d"
+          python trainability-real-llm/conversion_benchmark.py --target '${{ matrix.target }}' --conversion '${{ matrix.conversion }}' --seed '${{ matrix.seed }}' --steps 20 --out "$d" 2>&1 | tee "$d/run.log"
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tq-${{ matrix.target }}-${{ matrix.conversion }}-seed${{ matrix.seed }}
+          path: results/${{ matrix.target }}-${{ matrix.conversion }}-seed${{ matrix.seed }}/
+          if-no-files-found: warn
+          retention-days: 30
