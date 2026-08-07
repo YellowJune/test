@@ -1,0 +1,27 @@
+name: Trainability Portability v3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [qwen, llama, mistral]
+        seed: [0, 1, 2]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install
+        run: pip install --upgrade torch --index-url https://download.pytorch.org/whl/cpu && pip install 'transformers<5' huggingface_hub safetensors sentencepiece protobuf
+      - name: Run portability benchmark
+        run: python trainability-real-llm/portability_benchmark.py --target ${{ matrix.target }} --seed ${{ matrix.seed }} --output outputs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: portability-${{ matrix.target }}-seed${{ matrix.seed }}
+          path: outputs/*.json
