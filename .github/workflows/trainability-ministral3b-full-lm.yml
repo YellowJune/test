@@ -1,0 +1,52 @@
+name: Trainability Ministral 3B Full LM
+
+on:
+  push:
+    paths:
+      - 'trainability-real-llm/ministral_full_lm.py'
+      - '.github/workflows/trainability-ministral3b-full-lm.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  HF_HOME: ${{ github.workspace }}/.hf-cache
+  TOKENIZERS_PARALLELISM: 'false'
+  PYTHONUNBUFFERED: '1'
+
+jobs:
+  full:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: [0, 1, 2]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Free disk
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc || true
+          df -h
+      - name: Install CPU stack
+        run: |
+          python -m pip install --upgrade pip
+          pip install --extra-index-url https://download.pytorch.org/whl/cpu torch
+          pip install 'transformers>=4.51,<5' 'huggingface_hub>=0.34' safetensors accelerate sentencepiece protobuf hf_xet
+      - name: Run full 3B causal-LM test
+        run: |
+          d='results/ministral3b-seed${{ matrix.seed }}'
+          mkdir -p "$d"
+          python trainability-real-llm/ministral_full_lm.py --seed '${{ matrix.seed }}' --out "$d" 2>&1 | tee "$d/run.log"
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tq-ministral3b-full-seed${{ matrix.seed }}
+          path: results/ministral3b-seed${{ matrix.seed }}/
+          if-no-files-found: warn
+          retention-days: 30
