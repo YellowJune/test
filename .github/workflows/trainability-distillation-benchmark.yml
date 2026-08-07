@@ -21,7 +21,9 @@ jobs:
     timeout-minutes: 300
     strategy:
       fail-fast: false
+      max-parallel: 6
       matrix:
+        student_layers: [12, 18, 22]
         seed: [0, 1, 2]
     steps:
       - uses: actions/checkout@v4
@@ -35,14 +37,14 @@ jobs:
           pip install 'transformers>=4.51,<5' 'huggingface_hub>=0.34' safetensors accelerate sentencepiece protobuf hf_xet
       - name: Run distillation benchmark
         run: |
-          d='results/qwen-distill-seed${{ matrix.seed }}'
+          d='results/qwen-distill-L${{ matrix.student_layers }}-seed${{ matrix.seed }}'
           mkdir -p "$d"
-          python trainability-real-llm/distillation_benchmark.py --seed '${{ matrix.seed }}' --out "$d" 2>&1 | tee "$d/run.log"
+          python trainability-real-llm/distillation_benchmark.py --student-layers '${{ matrix.student_layers }}' --seed '${{ matrix.seed }}' --out "$d" 2>&1 | tee "$d/run.log"
       - name: Upload result
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: tq-qwen-distill-seed${{ matrix.seed }}
-          path: results/qwen-distill-seed${{ matrix.seed }}/
+          name: tq-qwen-distill-L${{ matrix.student_layers }}-seed${{ matrix.seed }}
+          path: results/qwen-distill-L${{ matrix.student_layers }}-seed${{ matrix.seed }}/
           if-no-files-found: warn
           retention-days: 30
