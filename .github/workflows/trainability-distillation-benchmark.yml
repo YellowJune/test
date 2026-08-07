@@ -1,20 +1,16 @@
 name: Trainability Distillation Benchmark
-
 on:
   push:
     paths:
       - 'trainability-real-llm/distillation_benchmark.py'
       - '.github/workflows/trainability-distillation-benchmark.yml'
   workflow_dispatch:
-
 permissions:
   contents: read
-
 env:
   HF_HOME: ${{ github.workspace }}/.hf-cache
   TOKENIZERS_PARALLELISM: 'false'
   PYTHONUNBUFFERED: '1'
-
 jobs:
   distill:
     runs-on: ubuntu-latest
@@ -36,10 +32,12 @@ jobs:
           pip install --extra-index-url https://download.pytorch.org/whl/cpu torch
           pip install 'transformers>=4.51,<5' 'huggingface_hub>=0.34' safetensors accelerate sentencepiece protobuf hf_xet
       - name: Run distillation benchmark
+        shell: bash
         run: |
-          d='results/qwen-distill-L${{ matrix.student_layers }}-seed${{ matrix.seed }}'
-          mkdir -p "$d"
+          set -euo pipefail
+          d='results/qwen-distill-L${{ matrix.student_layers }}-seed${{ matrix.seed }}'; mkdir -p "$d"
           python trainability-real-llm/distillation_benchmark.py --student-layers '${{ matrix.student_layers }}' --seed '${{ matrix.seed }}' --out "$d" 2>&1 | tee "$d/run.log"
+          test -n "$(find "$d" -name '*.json' -print -quit)"
       - name: Upload result
         if: always()
         uses: actions/upload-artifact@v4
