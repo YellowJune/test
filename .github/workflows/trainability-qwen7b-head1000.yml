@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        seed: [0, 1]
+        seed: [2]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -40,7 +40,7 @@ jobs:
         run: |
           set -euo pipefail
           d='results/qwen7b-head1000-seed${{ matrix.seed }}'; mkdir -p "$d"
-          python trainability-real-llm/qwen7b_head_1000.py --seed '${{ matrix.seed }}' --steps 1000 --out "$d" 2>&1 | tee "$d/run.log"
+          python trainability-real-llm/qwen7b_head_1000.py --seed '${{ matrix.seed }}' --steps 1000 --lr 0.0005 --out "$d" 2>&1 | tee "$d/run.log"
           test -n "$(find "$d" -name '*.json' -print -quit)"
       - name: Upload result
         uses: actions/upload-artifact@v4
