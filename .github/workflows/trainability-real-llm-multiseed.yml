@@ -1,0 +1,48 @@
+name: Trainability Real LLM MultiSeed
+
+on:
+  push:
+    paths:
+      - 'trainability-real-llm/real_llm_seeded.py'
+      - '.github/workflows/trainability-real-llm-multiseed.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  HF_HOME: ${{ github.workspace }}/.hf-cache
+  TOKENIZERS_PARALLELISM: 'false'
+  PYTHONUNBUFFERED: '1'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [qwen, llama, mistral]
+        seed: [0, 1, 2]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU stack
+        run: |
+          python -m pip install --upgrade pip
+          pip install --extra-index-url https://download.pytorch.org/whl/cpu torch
+          pip install 'transformers>=4.51,<5' 'huggingface_hub>=0.34' safetensors accelerate sentencepiece protobuf hf_xet
+      - name: Run real pretrained test
+        run: |
+          mkdir -p results/${{ matrix.target }}-${{ matrix.seed }}
+          python trainability-real-llm/real_llm_seeded.py --target '${{ matrix.target }}' --seed '${{ matrix.seed }}' --out results/${{ matrix.target }}-${{ matrix.seed }} 2>&1 | tee results/${{ matrix.target }}-${{ matrix.seed }}/run.log
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trainability-real-${{ matrix.target }}-seed${{ matrix.seed }}
+          path: results/${{ matrix.target }}-${{ matrix.seed }}/
+          if-no-files-found: warn
+          retention-days: 30
