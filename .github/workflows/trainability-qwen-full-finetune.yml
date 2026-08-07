@@ -34,9 +34,12 @@ jobs:
           pip install --extra-index-url https://download.pytorch.org/whl/cpu torch
           pip install 'transformers>=4.51,<5' 'huggingface_hub>=0.34' safetensors accelerate sentencepiece protobuf hf_xet datasets
       - name: Run full parameter continuation
+        shell: bash
         run: |
+          set -euo pipefail
           d='results/qwen-full-${{ matrix.conversion }}-seed${{ matrix.seed }}'; mkdir -p "$d"
           python trainability-real-llm/full_finetune_qwen.py --conversion '${{ matrix.conversion }}' --seed '${{ matrix.seed }}' --out "$d" 2>&1 | tee "$d/run.log"
+          test -n "$(find "$d" -name '*.json' -print -quit)"
       - name: Upload result
         if: always()
         uses: actions/upload-artifact@v4
