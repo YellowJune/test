@@ -1,0 +1,20 @@
+{
+  "name": "Trainability Quotient Model Conversion Benchmark",
+  "version": "1.0",
+  "primary_metric": "TQ_traj=1/(1+D_func)",
+  "required_reporting": [
+    "initial_prediction_relerr",
+    "D_func",
+    "TQ_traj",
+    "final_loss",
+    "replicates",
+    "continuation_contract"
+  ],
+  "tiers": {
+    "A": "exact-equivalence stress",
+    "B": "approximate conversion",
+    "C": "full-parameter continuation",
+    "D": ">=3B/7B scale stress",
+    "E": "optimizer portability"
+  }
+}
