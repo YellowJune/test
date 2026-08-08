@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*.aux
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+paper/tmp_render/
+figures/contact.png

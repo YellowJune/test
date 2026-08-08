@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use VANISH, please cite the paper and this software artifact."
+title: "VANISH: Exact Finite-Update Preservation by Function-Space Annihilation"
+type: software
+version: 1.0.0
+date-released: 2026-08-08
+authors:
+  - family-names: Kim
+    given-names: JunHyun
+    affiliation: Independent Researcher
+license: MIT
