@@ -139,6 +139,7 @@ def run_one(
 
     elapsed = time.perf_counter() - start
     return {
+        "protocol_version": "2.0-kill-gate",
         "benchmark": "cifar100_resnet18_imagenet1k",
         "stream": f"cifar100_{tasks}task",
         "method": method,
