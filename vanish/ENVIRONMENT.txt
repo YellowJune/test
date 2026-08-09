@@ -1,0 +1,11 @@
+Reference environment
+=====================
+Python: 3.12.13
+NumPy: 2.3.5
+SciPy: 1.17.0
+scikit-learn: 1.8.0
+Matplotlib: 3.10.8
+TeX: pdfTeX 3.141592653-2.6-1.40.25 (TeX Live 2023)
+Threads: OPENBLAS_NUM_THREADS=4
+Platform: CPU-only reference run
+

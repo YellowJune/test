@@ -1,0 +1,152 @@
+\begin{thebibliography}{10}
+
+\bibitem{mccloskey1989catastrophic}
+M.~McCloskey and N.~J. Cohen, ``Catastrophic interference in connectionist
+  networks: The sequential learning problem,'' in {\em Psychology of Learning
+  and Motivation}, vol.~24, pp.~109--165, Academic Press, 1989.
+
+\bibitem{french1999catastrophic}
+R.~M. French, ``Catastrophic forgetting in connectionist networks,'' {\em
+  Trends in Cognitive Sciences}, vol.~3, no.~4, pp.~128--135, 1999.
+
+\bibitem{goodfellow2014empirical}
+I.~J. Goodfellow, M.~Mirza, D.~Xiao, A.~Courville, and Y.~Bengio, ``An
+  empirical investigation of catastrophic forgetting in gradient-based neural
+  networks,'' in {\em International Conference on Learning Representations},
+  2014.
+
+\bibitem{kirkpatrick2017overcoming}
+J.~Kirkpatrick {\em et~al.}, ``Overcoming catastrophic forgetting in neural
+  networks,'' {\em Proceedings of the National Academy of Sciences}, vol.~114,
+  no.~13, pp.~3521--3526, 2017.
+
+\bibitem{zenke2017continual}
+F.~Zenke, B.~Poole, and S.~Ganguli, ``Continual learning through synaptic
+  intelligence,'' in {\em International Conference on Machine Learning},
+  pp.~3987--3995, 2017.
+
+\bibitem{aljundi2018mas}
+R.~Aljundi, F.~Babiloni, M.~Elhoseiny, M.~Rohrbach, and T.~Tuytelaars, ``Memory
+  aware synapses: Learning what (not) to forget,'' in {\em European Conference
+  on Computer Vision}, pp.~139--154, 2018.
+
+\bibitem{li2017learning}
+Z.~Li and D.~Hoiem, ``Learning without forgetting,'' {\em IEEE Transactions on
+  Pattern Analysis and Machine Intelligence}, vol.~40, no.~12, pp.~2935--2947,
+  2018.
+
+\bibitem{liu2026ewc}
+X.~Liu {\em et~al.}, ``Elastic weight consolidation done right for continual
+  learning,'' in {\em IEEE/CVF Conference on Computer Vision and Pattern
+  Recognition}, 2026.
+
+\bibitem{rebuffi2017icarl}
+S.-A. Rebuffi, A.~Kolesnikov, G.~Sperl, and C.~H. Lampert, ``icarl: Incremental
+  classifier and representation learning,'' in {\em IEEE Conference on Computer
+  Vision and Pattern Recognition}, pp.~2001--2010, 2017.
+
+\bibitem{lopezpaz2017gem}
+D.~Lopez-Paz and M.~Ranzato, ``Gradient episodic memory for continual
+  learning,'' in {\em Advances in Neural Information Processing Systems},
+  vol.~30, 2017.
+
+\bibitem{chaudhry2019agem}
+A.~Chaudhry, M.~Ranzato, M.~Rohrbach, and M.~Elhoseiny, ``Efficient lifelong
+  learning with a-gem,'' in {\em International Conference on Learning
+  Representations}, 2019.
+
+\bibitem{riemer2019mer}
+M.~Riemer, I.~Cases, R.~Ajemian, M.~Liu, I.~Rish, Y.~Tu, and G.~Tesauro,
+  ``Learning to learn without forgetting by maximizing transfer and minimizing
+  interference,'' in {\em International Conference on Learning
+  Representations}, 2019.
+
+\bibitem{rusu2016progressive}
+A.~A. Rusu {\em et~al.}, ``Progressive neural networks,'' {\em arXiv preprint
+  arXiv:1606.04671}, 2016.
+
+\bibitem{mallya2018packnet}
+A.~Mallya and S.~Lazebnik, ``Packnet: Adding multiple tasks to a single network
+  by iterative pruning,'' in {\em IEEE Conference on Computer Vision and
+  Pattern Recognition}, pp.~7765--7773, 2018.
+
+\bibitem{schwarz2018progress}
+J.~Schwarz {\em et~al.}, ``Progress \& compress: A scalable framework for
+  continual learning,'' in {\em International Conference on Machine Learning},
+  pp.~4528--4537, 2018.
+
+\bibitem{wang2025selfexpansion}
+H.~Wang {\em et~al.}, ``Self-expansion of pre-trained models with mixture of
+  adapters for continual learning,'' in {\em IEEE/CVF Conference on Computer
+  Vision and Pattern Recognition}, 2025.
+
+\bibitem{bennani2020ogd}
+M.~Bennani, T.~Doan, and M.~Sugiyama, ``Generalisation guarantees for continual
+  learning with orthogonal gradient descent,'' in {\em Advances in Neural
+  Information Processing Systems}, vol.~33, pp.~8977--8989, 2020.
+
+\bibitem{saha2021gpm}
+G.~Saha, I.~Garg, and K.~Roy, ``Gradient projection memory for continual
+  learning,'' in {\em International Conference on Learning Representations},
+  2021.
+
+\bibitem{wang2021nscl}
+S.~Wang, X.~Li, J.~Sun, and Z.~Xu, ``Training networks in null space of feature
+  covariance for continual learning,'' in {\em IEEE/CVF Conference on Computer
+  Vision and Pattern Recognition}, pp.~184--193, 2021.
+
+\bibitem{titsias2020functional}
+M.~K. Titsias, J.~Schwarz, A.~G. de~G.~Matthews, R.~Pascanu, and Y.~W. Teh,
+  ``Functional regularisation for continual learning with gaussian processes,''
+  in {\em International Conference on Learning Representations}, 2020.
+
+\bibitem{derakhshani2021kernel}
+M.~M. Derakhshani, X.~Zhen, L.~Shao, and C.~G.~M. Snoek, ``Kernel continual
+  learning,'' in {\em International Conference on Machine Learning},
+  pp.~2621--2631, 2021.
+
+\bibitem{rudner2022sequential}
+T.~G.~J. Rudner, F.~Bickford~Smith, Q.~Feng, Y.~W. Teh, and Y.~Gal, ``Continual
+  learning via sequential function-space variational inference,'' in {\em
+  International Conference on Machine Learning}, pp.~18871--18887, 2022.
+
+\bibitem{aronszajn1950rkhs}
+N.~Aronszajn, ``Theory of reproducing kernels,'' {\em Transactions of the
+  American Mathematical Society}, vol.~68, no.~3, pp.~337--404, 1950.
+
+\bibitem{scholkopf2002kernels}
+B.~Sch\"olkopf and A.~J. Smola, {\em Learning with Kernels}.
+\newblock MIT Press, 2002.
+
+\bibitem{micchelli2005vector}
+C.~A. Micchelli and M.~Pontil, ``On learning vector-valued functions,'' {\em
+  Neural Computation}, vol.~17, no.~1, pp.~177--204, 2005.
+
+\bibitem{rasmussen2006gp}
+C.~E. Rasmussen and C.~K.~I. Williams, {\em Gaussian Processes for Machine
+  Learning}.
+\newblock MIT Press, 2006.
+
+\bibitem{kang2025rest}
+H.~Kang {\em et~al.}, ``Do your best and get enough rest for continual
+  learning,'' in {\em IEEE/CVF Conference on Computer Vision and Pattern
+  Recognition}, 2025.
+
+\bibitem{liu2025lora}
+Y.~Liu {\em et~al.}, ``Lora subtraction for drift-resistant space in
+  exemplar-free continual learning,'' in {\em IEEE/CVF Conference on Computer
+  Vision and Pattern Recognition}, 2025.
+
+\bibitem{li2026faster}
+W.~Li {\em et~al.}, ``A faster path to continual learning,'' in {\em IEEE/CVF
+  Conference on Computer Vision and Pattern Recognition}, 2026.
+
+\bibitem{wilcoxon1945}
+F.~Wilcoxon, ``Individual comparisons by ranking methods,'' {\em Biometrics
+  Bulletin}, vol.~1, no.~6, pp.~80--83, 1945.
+
+\bibitem{holm1979}
+S.~Holm, ``A simple sequentially rejective multiple test procedure,'' {\em
+  Scandinavian Journal of Statistics}, vol.~6, no.~2, pp.~65--70, 1979.
+
+\end{thebibliography}
