@@ -1,0 +1,53 @@
+name: Green AI Tensor Experiment
+
+on:
+  push:
+    branches: [green-ai-tensor-experiment]
+    paths:
+      - "green-ai-tensor/**"
+      - ".github/workflows/green_ai_tensor.yml"
+  workflow_dispatch:
+    inputs:
+      finetune_epochs:
+        description: "Fine-tuning epochs for each compressed model"
+        required: true
+        default: "5"
+
+jobs:
+  experiment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: green-ai-tensor/requirements.txt
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r green-ai-tensor/requirements.txt
+
+      - name: Run experiment
+        run: |
+          EPOCHS="${{ github.event.inputs.finetune_epochs || '5' }}"
+          python green-ai-tensor/run_experiment.py             --finetune-epochs "$EPOCHS"             --benchmark-images 2000             --threads 2             --out-dir green-ai-tensor/outputs
+
+      - name: Summary
+        if: always()
+        run: |
+          if [ -f green-ai-tensor/outputs/report.md ]; then
+            cat green-ai-tensor/outputs/report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: green-ai-tensor-results
+          path: green-ai-tensor/outputs/**
+          if-no-files-found: warn
+          retention-days: 30
